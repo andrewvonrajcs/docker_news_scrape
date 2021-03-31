@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from gensim.summarization import summarize 
 
-def newsdoc():
+def handler(event, context):
 
     #grabs 2 current articles from nbcnews 
     site = requests.get('https://marquee.nbcnews.com/data/bento/latest.json')
@@ -12,8 +12,8 @@ def newsdoc():
     link2 = parse2["link"]
 
     #Retreveing text from links
-    page1 = requests.get(link1).text
-    page2 = requests.get(link2).text
+    page1 = requests.get(link1 or "https://www.nbcnews.com/tech/tech-news/visa-moves-allow-payment-settlements-using-cryptocurrency-rcna534").text
+    page2 = requests.get(link2 or "https://www.nbcnews.com/tech/tech-news/visa-moves-allow-payment-settlements-using-cryptocurrency-rcna534").text
 
     #turning page to beautiful Soup object 
     soup1 = BeautifulSoup(page1, 'html.parser')
@@ -47,24 +47,13 @@ def newsdoc():
 
     #summarized article1
     
-    smart = {
-        "sim" : f'Article summary: \n {summary1}', 
-        "sim2": f'Article summary: \n {summary2}'
+    summaries = {
+        "sum1": f'Article summary: \n {summary1}', 
+        "sum2": f'Article summary: \n {summary2}'
     }
-    x = smart["sim"]
-    y = smart["sim2"] 
+    x = summaries["sum1"]
+    y = summaries["sum2"] 
 
-    '''print(f'Length of original article: {len(article1)}')
-    print(f'Length of summary: {len(summary1)}\n')
-    print(f'Headline: {headline1}\n')
-    print(f'Article summary: \n {summary1}')
+    return x,y
 
-    #summerized article2
-    print(f'\nLength of original article: {len(article2)}')
-    print(f'Length of summary: {len(summary2)}\n')
-    print(f'Headline: {headline2}\n')
-    print(f'Article summary: \n {summary2}')'''
-
-    return x
-
-print(newsdoc())
+print(handler(0,0))
